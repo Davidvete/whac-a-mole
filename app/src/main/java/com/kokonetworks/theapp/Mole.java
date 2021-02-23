@@ -34,6 +34,20 @@ class Mole {
         },LEVELS[currentLevel], LEVELS[currentLevel], TimeUnit.MILLISECONDS);
     }
 
+    public void continueHopping(long startTime, int level){
+        currentLevel = level - 1;
+        field.getListener().onLevelChange(getCurrentLevel());
+        startTimeForLevel = startTime;
+
+        future = scheduledExecutorService.scheduleAtFixedRate(() -> {
+            field.setActive(nextHole());
+
+            if(System.currentTimeMillis()-startTimeForLevel >= LEVEL_DURATION_MS && getCurrentLevel() < LEVELS.length){
+                nextLevel();
+            }
+        },LEVELS[currentLevel], LEVELS[currentLevel], TimeUnit.MILLISECONDS);
+    }
+
     public void stopHopping(){
         future.cancel(false);
     }
@@ -46,6 +60,10 @@ class Mole {
 
     public int getCurrentLevel(){
         return currentLevel+1;
+    }
+
+    public long getStartTimeForLevel(){
+        return startTimeForLevel;
     }
 
     private int nextHole(){
