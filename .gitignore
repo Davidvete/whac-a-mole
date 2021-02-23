@@ -29,6 +29,7 @@ dist/
 # suggested files/folders to ignore
 .gradle/
 local.properties
+app/build
 
 # Unit test reports
 TEST*.xml
