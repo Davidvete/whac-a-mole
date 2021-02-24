@@ -52,5 +52,11 @@ public class MainActivity extends AppCompatActivity {
         public void onLevelChange(int level) {
             tvLevel.setText(String.format(getString(R.string.level), level));
         }
+
+        @Override
+        public void onScoreChange(int score) {
+            tvScore.setVisibility(View.VISIBLE);
+            tvScore.setText(String.format(getString(R.string.your_score), score));
+        }
     };
 }

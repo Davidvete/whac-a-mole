@@ -26,6 +26,17 @@ class Mole {
         startTimeForLevel = System.currentTimeMillis();
 
         future = scheduledExecutorService.scheduleAtFixedRate(() -> {
+            //todo figure out how to end game if user does not interact using the code commented out.
+//            if(field.getUserInteractionTracker()){
+//                field.setActive(nextHole());
+//
+//                if(System.currentTimeMillis()-startTimeForLevel >= LEVEL_DURATION_MS && getCurrentLevel() < LEVELS.length){
+//                    nextLevel();
+//                }
+//            }else{
+//                stopHopping();
+//                field.endGame();
+//            }
             field.setActive(nextHole());
 
             if(System.currentTimeMillis()-startTimeForLevel >= LEVEL_DURATION_MS && getCurrentLevel() < LEVELS.length){

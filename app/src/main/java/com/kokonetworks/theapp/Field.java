@@ -16,7 +16,7 @@ class Field extends LinearLayout {
     private final SquareButton[] circles = new SquareButton[9];
     private int currentCircle;
     private Listener listener;
-
+    private boolean userInteractionTracker = false;
     private int score;
     private Mole mole;
 
@@ -73,12 +73,15 @@ class Field extends LinearLayout {
             squareButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    userInteractionTracker = true;
                     boolean active = (boolean) view.getTag(ACTIVE_TAG_KEY);
                     if (active) {
                         score += mole.getCurrentLevel() * 2;
+                        listener.onScoreChange(score);
                     } else {
-                        mole.stopHopping();
                         listener.onGameEnded(score);
+                        mole.stopHopping();
+                        setLastSelectedSquareButton(view);
                     }
                 }
             });
@@ -108,6 +111,14 @@ class Field extends LinearLayout {
         });
     }
 
+    public void setLastSelectedSquareButton(View squareButton) {
+        resetCircles();
+        mainHandler.post(() -> {
+            SquareButton squareButtonView = (SquareButton) squareButton;
+            squareButtonView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.hole_active));
+        });
+    }
+
     public Listener getListener() {
         return listener;
     }
@@ -116,9 +127,20 @@ class Field extends LinearLayout {
         this.listener = listener;
     }
 
+    public boolean getUserInteractionTracker(){
+        return userInteractionTracker;
+    }
+
+    public void endGame(){
+        userInteractionTracker = false;
+        listener.onGameEnded(0);
+    }
+
     public interface Listener {
         void onGameEnded(int score);
 
         void onLevelChange(int level);
+
+        void onScoreChange(int score);
     }
 }
